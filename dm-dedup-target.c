@@ -1300,20 +1300,28 @@ static void dm_dedup_status(struct dm_target *ti, status_type_t status_type,
 		data_free_block_count =
 			data_total_block_count - data_used_block_count;
 
-		DMEMIT("%llu %llu %llu %llu ",
+		DMEMIT("\nTotal Block Count 	= %llu"
+		       "\nFree Block Count 	= %llu"
+		       "\nUsed Block Count 	= %llu"
+		       "\nActual Block Count 	= %llu\n",
 		       data_total_block_count, data_free_block_count,
 			data_used_block_count, data_actual_block_count);
-
-		DMEMIT("%d %d:%d %d:%d ",
+		
+		// Author: Pushan Gore - Changing this redundant output info
+		/*DMEMIT("%d %d:%d %d:%d ",
 		       dc->block_size,
 			MAJOR(dc->data_dev->bdev->bd_dev),
 			MINOR(dc->data_dev->bdev->bd_dev),
 			MAJOR(dc->metadata_dev->bdev->bd_dev),
 			MINOR(dc->metadata_dev->bdev->bd_dev));
+		*/
 
-		DMEMIT("%llu %llu %llu %llu %llu %llu %llu",
-		       dc->writes, dc->uniqwrites, dc->dupwrites,
-			dc->reads_on_writes, dc->overwrites, dc->newwrites, dc->gc_counter);
+		// Author: Pushan Gore - Removing unused parameters. Adding dedup ratio
+		DMEMIT("\nTotal Writes 		= %llu"
+		       "\nUnique Writes		= %llu"
+		       "\nDuplicate Writes	= %llu\n"
+		       "\nDeduplication Ratio	= %llu\n",
+		       dc->writes, dc->uniqwrites, dc->dupwrites, (data_actual_block_count/data_used_block_count));
 		break;
 	case STATUSTYPE_TABLE:
 		DMEMIT("%s %s %u %s %s %u",
